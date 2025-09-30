@@ -19,6 +19,20 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Register the ApplicationDbContext in the service container
 builder.Services.AddScoped<ApplicationDbContext>();
 
+// CORS Policy
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.WithOrigins("http://localhost:5173", "https://localhost:5173")
+                                .AllowAnyHeader()
+                                .AllowAnyMethod()
+                                .AllowCredentials();
+                      });
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -28,6 +42,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
+app.UseCors(MyAllowSpecificOrigins); // Apply CORS policy
 app.MapControllers();
 
 app.Run();

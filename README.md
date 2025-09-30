@@ -38,7 +38,7 @@ OzGecmisAI is a resume management API built with ASP.NET Core that allows users 
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/OzGecmisAI.git
+git clone https://github.com/bariskacin/OzGecmisAI.git
 ```
 
 2. Navigate to the project directory:

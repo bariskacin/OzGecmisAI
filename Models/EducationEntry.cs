@@ -4,6 +4,8 @@ namespace OzGecmisAI.Models
 {
     public class EducationEntry
     {
+        public int Id { get; set; }
+
         [Required]
         public string Institution { get; set; } = string.Empty;
 

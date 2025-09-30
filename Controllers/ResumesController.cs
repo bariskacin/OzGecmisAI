@@ -73,6 +73,26 @@ namespace OzGecmisAI.Controllers
             return Ok(resume);
         }
 
+        // GET: api/resumes
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Resume>>> GetResumes()
+        {
+            var resumes = await _context.Resumes
+                .Include(r => r.PersonalInfo)
+                .Include(r => r.Education)
+                .Include(r => r.Experience)
+                .Include(r => r.Skills)
+                .ToListAsync();
+
+            if (resumes == null || !resumes.Any())
+            {
+                return NotFound();
+            }
+
+            return Ok(resumes);
+        }
+
+
         // PUT: api/resumes/{id}
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateResume(int id, [FromBody] Resume resume)
