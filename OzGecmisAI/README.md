@@ -14,10 +14,17 @@ OzGecmisAI is a resume management API built with ASP.NET Core that allows users 
 
 ## Technologies
 
+### Backend
 - ASP.NET Core
 - Entity Framework Core
 - SQLite
 - C# 10.0
+
+### Frontend
+- React
+- Vite
+- JavaScript/JSX
+- CSS3/Modern CSS
 
 ## API Endpoints
 
@@ -32,6 +39,8 @@ OzGecmisAI is a resume management API built with ASP.NET Core that allows users 
 ### Prerequisites
 
 - .NET 10.0 SDK or later
+- Node.js 18.x or later
+- npm 9.x or later
 - Visual Studio 2022 or Visual Studio Code
 
 ### Installation
@@ -56,10 +65,29 @@ dotnet restore
 dotnet ef database update
 ```
 
-5. Run the application:
+5. Run the backend API:
 ```bash
 dotnet run
 ```
+
+### Frontend Setup
+
+1. Navigate to the client-app directory:
+```bash
+cd client-app
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Run the development server:
+```bash
+npm run dev
+```
+
+The frontend will be available at `http://localhost:5173`
 
 ## License
 
