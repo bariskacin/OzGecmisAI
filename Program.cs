@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -14,35 +15,51 @@ builder.Services.AddEndpointsApiExplorer();
 
 // Configure Entity Framework Core with SQLite
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+{
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+    // Configure query splitting behavior for better performance with multiple includes
+    options.ConfigureWarnings(warnings => warnings.Ignore(RelationalEventId.MultipleCollectionIncludeWarning));
+});
 
 // Register the ApplicationDbContext in the service container
 builder.Services.AddScoped<ApplicationDbContext>();
 
 // CORS Policy
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: MyAllowSpecificOrigins,
-                      policy =>
-                      {
-                          policy.WithOrigins("http://localhost:5173", "https://localhost:5173")
-                                .AllowAnyHeader()
-                                .AllowAnyMethod()
-                                .AllowCredentials();
-                      });
+    options.AddDefaultPolicy(
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials();
+        });
 });
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    // Development specific middleware can be added here
+    app.UseDeveloperExceptionPage();
 }
 
+app.UseRouting();
+
+// Add middleware to log requests
+app.Use(async (context, next) =>
+{
+    Console.WriteLine($"Request: {context.Request.Method} {context.Request.Path}");
+    await next();
+    Console.WriteLine($"Response Status: {context.Response.StatusCode}");
+});
 app.UseHttpsRedirection();
 app.UseAuthorization();
-app.UseCors(MyAllowSpecificOrigins); // Apply CORS policy
+app.UseCors(); // Apply default CORS policy
 app.MapControllers();
+
+// Add a route for API root to verify API is working
+app.MapGet("/", () => "OzGecmisAI API is running!");
 
 app.Run();

@@ -8,8 +8,8 @@ using ApplicationDbContext = OzGecmisAI.Data.ApplicationDbContext;
 
 namespace OzGecmisAI.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class ResumesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -84,11 +84,7 @@ namespace OzGecmisAI.Controllers
                 .Include(r => r.Skills)
                 .ToListAsync();
 
-            if (resumes == null || !resumes.Any())
-            {
-                return NotFound();
-            }
-
+            // Return empty array instead of 404 when no resumes found
             return Ok(resumes);
         }
 
